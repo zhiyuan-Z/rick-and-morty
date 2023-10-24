@@ -1,8 +1,8 @@
 import styles from "@/styles/Pagination.module.css";
 
 type PaginationProps = {
-  currentPage: number | undefined;
-  totalPages: number;
+  currentPage: number;
+  totalPages: number | null;
   onPageChange: (newPage: number) => void;
 };
 
@@ -34,7 +34,7 @@ export default function Pagination({
   totalPages,
   onPageChange,
 }: PaginationProps) {
-  if (currentPage)
+  if (currentPage && totalPages)
     return (
       <div className={styles.container}>
         <button
@@ -61,7 +61,7 @@ export default function Pagination({
           onPageChange={onPageChange}
           currentPage={currentPage}
         />
-        {currentPage > 3 && (
+        {currentPage > 4 && (
           <span key="ellipsis-start">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -76,39 +76,39 @@ export default function Pagination({
           </span>
         )}
         {currentPage > 3 && (
-          <>
-            <PaginationButton
-              number={currentPage - 2}
-              onPageChange={onPageChange}
-              currentPage={currentPage}
-            />
-            <PaginationButton
-              number={currentPage - 1}
-              onPageChange={onPageChange}
-              currentPage={currentPage}
-            />
-          </>
+          <PaginationButton
+            number={currentPage - 2}
+            onPageChange={onPageChange}
+            currentPage={currentPage}
+          />
         )}
-        {currentPage !== 1 && currentPage !== totalPages && (
+        {currentPage > 2 && (
+          <PaginationButton
+            number={currentPage - 1}
+            onPageChange={onPageChange}
+            currentPage={currentPage}
+          />
+        )}
+        {(currentPage !== 1 && currentPage !== totalPages) && (
           <PaginationButton
             number={currentPage}
             onPageChange={onPageChange}
             currentPage={currentPage}
           />
         )}
+        {currentPage < totalPages - 1 && (
+          <PaginationButton
+            number={currentPage + 1}
+            onPageChange={onPageChange}
+            currentPage={currentPage}
+          />
+        )}
         {currentPage < totalPages - 2 && (
-          <>
-            <PaginationButton
-              number={currentPage + 1}
-              onPageChange={onPageChange}
-              currentPage={currentPage}
-            />
-            <PaginationButton
-              number={currentPage + 2}
-              onPageChange={onPageChange}
-              currentPage={currentPage}
-            />
-          </>
+          <PaginationButton
+            number={currentPage + 2}
+            onPageChange={onPageChange}
+            currentPage={currentPage}
+          />
         )}
         {currentPage < totalPages - 3 && (
           <span key="ellipsis-end">

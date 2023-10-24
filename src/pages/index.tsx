@@ -5,18 +5,22 @@ import Characters from "@/components/Characters";
 import Pagination from "@/components/Pagination";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
+import type {
+  InferGetServerSidePropsType,
+  GetServerSidePropsContext,
+} from "next";
 import { getRickAndMortyCharacters } from "@/api/rickAndMortyAPI";
 import { Character } from "@/types/characterTypes";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const getServerSideProps = (async context => {
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
   const { query } = context;
-  let page = 1
-  let totalPages = 1
-  let data: Character[] = []
-  let error = null;
+  let page = 1;
+  let totalPages = null;
+  let data: Character[] = [];
   if (typeof query.page === "string") {
     page = parseInt(query.page, 10);
   }
@@ -28,21 +32,23 @@ export const getServerSideProps = (async context => {
     if (result.results) {
       data = result.results;
     } else {
-      data = [];
-      error = "No characters found.";
+      return {
+        notFound: true,
+      };
     }
   } catch {
-    error = "Failed to get characters.";
+    return {
+      notFound: true,
+    };
   }
-  return { props: { page, totalPages, data, error } };
-}) satisfies GetServerSideProps<{
-  page: number;
-  totalPages: number;
-  data: Character[];
-  error: string | null;
-}>;
+  return { props: { page, totalPages, data } };
+};
 
-export default function Home({page, totalPages, data, error}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Home({
+  page,
+  totalPages,
+  data,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState<number>(page);
 
@@ -52,10 +58,6 @@ export default function Home({page, totalPages, data, error}: InferGetServerSide
       query: { page: number },
     });
   };
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
 
   return (
     <>
