@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  border: 0;
+  background-color: white;
+  color: black;
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.button:disabled {
+  color: rgba(0, 0, 0, 0.25);
+  cursor: initial;
+}
+
+.active {
+  color: dodgerBlue;
+  border: solid 2px dodgerBlue;
+}
